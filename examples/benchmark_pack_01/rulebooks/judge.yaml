@@ -1,0 +1,9 @@
+name: judge
+objective: Compare expected vs actual reporting requirements for benchmark scoring.
+scoring:
+  overall_pass_rule: overall_pass is true only when no critical mismatches exist
+  score_guidance: start from 1.0 and subtract for mismatches (critical > warning > info)
+comparison_rules:
+  - Compare requirement_id sets and report missing or extra entries.
+  - Compare fields within matching requirement_id items (name, description, input_fields, logic, severity, tags, mapped_control_ids).
+  - Treat ordering differences as non-critical unless semantics change.

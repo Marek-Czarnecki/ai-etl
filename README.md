@@ -1,13 +1,13 @@
 # AI ETL
 
-A small, production-lean CLI that runs alongside the local Ollama + ChromaDB stack.
+A small, production-lean CLI that runs alongside a local Ollama + ChromaDB stack.
 
-## Requirements
+## Prerequisites
 
-- Python 3.11+
-- Docker + docker compose (for the existing stack)
+- Python 3.9+
+- Docker + docker compose
 
-## Setup
+## Docker Setup
 
 From the repo root:
 
@@ -15,104 +15,164 @@ From the repo root:
 docker compose up -d
 ```
 
-Install the CLI locally:
+If the model did not pull automatically:
 
 ```bash
-cd ai_etl
+docker compose exec ollama ollama pull llama3.2:1b
+```
+
+## Local Development Setup
+
+Create and activate a virtual environment, then install the CLI:
+
+```bash
 python -m venv .venv
-. .venv/bin/activate
+source .venv/bin/activate
 pip install -e .
 ```
 
-## Usage
-
-Web endpoints (when the stack is up):
-
-- Open WebUI: http://localhost:3000
-- Ollama API: http://localhost:11434
-- ChromaDB API: http://localhost:8000
-
-CLI entry points:
-
-- `ai-etl doctor` (health checks for Ollama + ChromaDB)
-- `ai-etl run` (run the end-to-end workflow and persist artifacts)
-- `ai-etl diff` (compare expected vs actual outputs)
-- `ai-etl propose` (generate rulebook patch proposals)
-
-Check connectivity:
+Verify connectivity:
 
 ```bash
-ai-etl doctor
+ai-etl doctor --verbose
 ```
 
-If the model did not pull automatically, install it manually:
+## Running a Simple Job
 
-```bash
-docker exec -it ai-etl-ollama-1 ollama pull llama3.2:1b
-```
+Example packs live in `examples/`.
 
-Run the workflow:
+Minimal run:
 
 ```bash
 ai-etl run \
-  --rulebook examples/rulebook.md \
-  --input examples/input.txt \
-  --examples examples/example_1.md \
-  --expected examples/expected.txt
+  --rulebook examples/rulebook.yaml \
+  --input examples/input.yaml
 ```
 
-Print a structured diff:
+Run with all `run` options:
 
 ```bash
-ai-etl diff --expected examples/expected.txt --actual out/<timestamp>/actual_output.md
+ai-etl run \
+  --rulebook examples/rulebook.yaml \
+  --input examples/input.yaml \
+  --examples examples/example_1.yaml \
+  --expected examples/expected.yaml \
+  --prompt prompts/run_generate.yaml \
+  --model llama3.2:1b \
+  --temperature 0 \
+  --top-p 1 \
+  --max-tokens 2048 \
+  --seed 42 \
+  --out-dir out \
+  --store-chroma \
+  --collection ai_etl_runs \
+  --verbose
 ```
 
-Generate a patch proposal from a diff JSON:
+## Running a Benchmark
+
+Benchmark Pack 01 runs four stages:
+A) regulatory excerpt -> controls
+B) controls -> reporting requirements
+C) reporting requirements -> validation report
+D) judge expected vs actual reporting requirements
 
 ```bash
-ai-etl propose --rulebook examples/rulebook.md --diff out/<timestamp>/comparison.json
+ai-etl benchmark \
+  --pack examples/benchmark_pack_01 \
+  --out-dir out \
+  --model llama3.2:1b \
+  --temperature 0 \
+  --top-p 1 \
+  --max-tokens 2048 \
+  --seed 42 \
+  --verbose
 ```
 
-## Outputs
+## Using diff
 
-Each `run` creates:
+Run with all `diff` options:
+
+```bash
+RUN_DIR="$(ls -dt out/[0-9]*/actual_output.yaml | head -1 | xargs dirname)/"
+ai-etl diff \
+  --rulebook examples/rulebook.yaml \
+  --expected examples/expected.yaml \
+  --actual "${RUN_DIR}actual_output.yaml" \
+  --prompt prompts/stage_d_judge.yaml \
+  --out-dir out \
+  --model llama3.2:1b \
+  --temperature 0 \
+  --top-p 1 \
+  --max-tokens 2048 \
+  --seed 42 \
+  --verbose
+```
+
+## Using propose
+
+Run with all `propose` options:
+
+```bash
+RUN_DIR="$(ls -dt out/[0-9]*/actual_output.yaml | head -1 | xargs dirname)/"
+DIFF_DIR="$(ls -dt out/[0-9]*/judge_report.yaml | head -1 | xargs dirname)/"
+ai-etl propose \
+  --rulebook examples/rulebook.yaml \
+  --diff "${DIFF_DIR}judge_report.yaml" \
+  --input examples/input.yaml \
+  --expected examples/expected.yaml \
+  --actual "${RUN_DIR}actual_output.yaml" \
+  --prompt prompts/propose_patch.yaml \
+  --model llama3.2:1b \
+  --temperature 0 \
+  --top-p 1 \
+  --max-tokens 2048 \
+  --seed 42 \
+  --verbose
+```
+
+## Output Structure
+
+Each `run` creates a timestamped folder (`expected.<ext>` appears only when `--expected` is set):
 
 ```
 out/<YYYYMMDD-HHMMSS>/
-  rulebook.md
+  rulebook.<ext>
   input.<ext>
   expected.<ext>
-  actual_output.md
-  comparison.json
-  rulebook_patch.md
-  rulebook_patch.diff
-  run_meta.json
+  actual_output.yaml
+  run_meta.yaml
 ```
 
-## Configuration
+Each `diff` creates a timestamped folder (`actual_input.<ext>` is the provided `--actual` copy):
 
-Environment variables:
+```
+out/<YYYYMMDD-HHMMSS>/
+  rulebook.<ext>
+  expected.<ext>
+  actual_input.<ext>
+  judge_report.yaml
+  run_meta.yaml
+```
 
-- `OLLAMA_BASE_URL` (default: http://localhost:11434)
-- `CHROMA_URL` (default: http://localhost:8000)
-- `AI_ETL_DEFAULT_MODEL` (default: llama3.1)
+Each `benchmark` creates:
 
-CLI flags override env vars.
-
-## Determinism
-
-`--temperature`, `--top-p`, and `--seed` are passed to Ollama options where supported.
-If the model ignores a parameter, Ollama will fall back to its default behavior.
-
-## Runtime notes
-
-- On macOS with Python 3.9, `urllib3` may warn about LibreSSL; this is harmless.
-- `ai-etl doctor` checks multiple ChromaDB health endpoints to support different versions.
-- If `ollama-init` fails to pull the model, use the manual pull command above.
+```
+out/benchmarks/<YYYYMMDD-HHMMSS>/
+  stage_a/<YYYYMMDD-HHMMSS>/
+  stage_b/<YYYYMMDD-HHMMSS>/
+  stage_c/<YYYYMMDD-HHMMSS>/
+  stage_d/<YYYYMMDD-HHMMSS>/
+  benchmark_manifest.yaml
+```
 
 ## Tests
 
 ```bash
-cd ai_etl
 pytest -q
 ```
+
+## Troubleshooting
+
+- If `ai-etl` is not found, confirm your virtual environment is active and `pip install -e .` has run.
+- If you cannot reach Ollama or ChromaDB, re-run `ai-etl doctor --verbose` and ensure `docker compose up -d` is running.

@@ -45,7 +45,7 @@ class OllamaClient:
 
         url = f"{self.base_url}/api/chat"
         logger.debug("Ollama chat request to %s", url)
-        response = requests.post(url, json=payload, timeout=120)
+        response = requests.post(url, json=payload, timeout=1200)
         response.raise_for_status()
         data = response.json()
         return data.get("message", {}).get("content", "")
@@ -54,7 +54,7 @@ class OllamaClient:
         url = f"{self.base_url}/api/embeddings"
         payload = {"model": self.model, "prompt": text}
         try:
-            response = requests.post(url, json=payload, timeout=60)
+            response = requests.post(url, json=payload, timeout=1200)
             response.raise_for_status()
             data = response.json()
             return data.get("embedding")

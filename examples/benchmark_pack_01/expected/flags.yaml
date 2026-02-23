@@ -1,0 +1,133 @@
+run_id: EXPECTED-BENCHMARK-01
+flags:
+  - transaction_id: TX-0006
+    requirement_id: REQ-001
+    severity: High
+    reason: abs(amount)=12500.00 >= 10000 threshold
+    evidence:
+      amount: -12500.0
+      currency: AUD
+      counterparty_country: SG
+      description: INTL TRANSFER REF 39281
+  - transaction_id: TX-0008
+    requirement_id: REQ-002
+    severity: High
+    reason: Cash withdrawals within 1 day sum(abs(amount))=1200.00 >= 900 (3 x 400)
+    evidence:
+      window_days: 1
+      amount_abs_sum: 1200.0
+      transactions_in_window:
+        - TX-0008
+        - TX-0009
+        - TX-0010
+      channel: CASH
+  - transaction_id: TX-0009
+    requirement_id: REQ-002
+    severity: High
+    reason: Cash withdrawals within 1 day sum(abs(amount))=1200.00 >= 900 (3 x 400)
+    evidence:
+      window_days: 1
+      amount_abs_sum: 1200.0
+      transactions_in_window:
+        - TX-0008
+        - TX-0009
+        - TX-0010
+      channel: CASH
+  - transaction_id: TX-0010
+    requirement_id: REQ-002
+    severity: High
+    reason: Cash withdrawals within 1 day sum(abs(amount))=1200.00 >= 900 (3 x 400)
+    evidence:
+      window_days: 1
+      amount_abs_sum: 1200.0
+      transactions_in_window:
+        - TX-0008
+        - TX-0009
+        - TX-0010
+      channel: CASH
+  - transaction_id: TX-0011
+    requirement_id: REQ-004
+    severity: Medium
+    reason: Matched keyword(s): CRYPTO, WALLET
+    evidence:
+      matched_keywords:
+        - CRYPTO
+        - WALLET
+      description: CRYPTOX TOPUP WALLET 1A2B3C
+  - transaction_id: TX-0012
+    requirement_id: REQ-004
+    severity: Medium
+    reason: Matched keyword(s): CRYPTO, WALLET
+    evidence:
+      matched_keywords:
+        - CRYPTO
+        - WALLET
+      description: CRYPTOX TOPUP WALLET 9Z8Y7X
+  - transaction_id: TX-0013
+    requirement_id: REQ-004
+    severity: Medium
+    reason: Matched keyword(s): CRYPTO, WALLET
+    evidence:
+      matched_keywords:
+        - CRYPTO
+        - WALLET
+      description: CRYPTOX TOPUP WALLET 5K4J3H
+  - transaction_id: TX-0018
+    requirement_id: REQ-003
+    severity: High
+    reason: counterparty_country=IR is in high-risk list
+    evidence:
+      counterparty_country: IR
+      description: INTL TRANSFER FAMILY SUPPORT
+      amount: -2200.0
+  - transaction_id: TX-0019
+    requirement_id: REQ-003
+    severity: High
+    reason: counterparty_country=IR is in high-risk list
+    evidence:
+      counterparty_country: IR
+      description: INTL TRANSFER FAMILY SUPPORT
+      amount: -2200.0
+  - transaction_id: TX-0023
+    requirement_id: REQ-005
+    severity: Medium
+    reason: Matched keyword(s): CASINO
+    evidence:
+      matched_keywords:
+        - CASINO
+      description: STAR CASINO ENTERTAINMENT
+  - transaction_id: TX-0024
+    requirement_id: REQ-006
+    severity: Medium
+    reason: Matched keyword(s): GIFTCARD
+    evidence:
+      matched_keywords:
+        - GIFTCARD
+      description: GIFTCARD HUB MELB CBD
+  - transaction_id: TX-0026
+    requirement_id: REQ-007
+    severity: High
+    reason: Inbound credit 7000.00 followed by outbound debit 6900.00 within 1 day
+    evidence:
+      inbound_tx: TX-0025
+      outbound_tx: TX-0026
+      window_days: 1
+      inbound_amount: 7000.0
+      outbound_amount: -6900.0
+  - transaction_id: TX-0022
+    requirement_id: REQ-008
+    severity: Low
+    reason: Matched keyword(s): URGENT, OVERDUE
+    evidence:
+      matched_keywords:
+        - URGENT
+        - OVERDUE
+      description: OUTBOUND URGENT INVOICE OVERDUE
+      amount: -5000.0
+summary:
+  total_transactions: 26
+  flagged_transactions: 11
+  flagged_by_severity:
+    High: 6
+    Medium: 4
+    Low: 1

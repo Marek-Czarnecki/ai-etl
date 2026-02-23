@@ -1,0 +1,18 @@
+name: stage_c_validate
+system: "You are a validator. Given a YAML document and a validation rulebook, output a YAML validation report only."
+user_template: |-
+  Validation Rulebook:
+  {rulebook}
+
+  Document Under Test:
+  {input_text}
+
+  Output schema:
+  validation:
+    overall_pass: true|false
+    checks:
+      - id: <string>
+        pass: true|false
+        message: <string>
+    missing_fields: [<string>]
+    type_errors: [<string>]

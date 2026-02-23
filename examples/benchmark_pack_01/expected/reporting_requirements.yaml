@@ -1,0 +1,161 @@
+requirements:
+  - requirement_id: REQ-001
+    name: Single high-value transaction
+    description: Flag any single transaction where abs(amount) >= 10000 AUD.
+    input_fields:
+      - amount
+      - currency
+    logic:
+      type: threshold
+      field: amount_abs
+      operator: ">="
+      value: 10000
+    severity: High
+    tags:
+      - AML
+      - Threshold
+    mapped_control_ids:
+      - CTRL-001
+      - CTRL-006
+  - requirement_id: REQ-002
+    name: Structuring-like repeated cash withdrawals
+    description: Flag where there are 3 or more cash withdrawals of abs(amount) >= 300 within 1 day on the same account.
+    input_fields:
+      - date
+      - account_id
+      - channel
+      - amount
+    logic:
+      type: rolling_sum
+      field: amount_abs
+      window_days: 1
+      operator: ">="
+      value: 900
+      direction: debit
+    severity: High
+    tags:
+      - AML
+      - Structuring
+      - Cash
+    mapped_control_ids:
+      - CTRL-002
+      - CTRL-006
+  - requirement_id: REQ-003
+    name: High-risk jurisdiction counterparty
+    description: Flag any transaction where counterparty_country is in the high-risk list (IR, KP, SY).
+    input_fields:
+      - counterparty_country
+    logic:
+      type: country_in
+      field: counterparty_country
+      countries:
+        - IR
+        - KP
+        - SY
+    severity: High
+    tags:
+      - AML
+      - Jurisdiction
+    mapped_control_ids:
+      - CTRL-003
+      - CTRL-006
+  - requirement_id: REQ-004
+    name: Keyword indicators: crypto / wallet
+    description: Flag transactions with descriptions indicating digital assets (crypto, wallet, exchange).
+    input_fields:
+      - description
+    logic:
+      type: keyword_match
+      field: description
+      keywords:
+        - CRYPTO
+        - WALLET
+        - EXCHANGE
+      match: any
+    severity: Medium
+    tags:
+      - AML
+      - Crypto
+    mapped_control_ids:
+      - CTRL-005
+      - CTRL-006
+  - requirement_id: REQ-005
+    name: Keyword indicators: gambling / casino
+    description: Flag transactions with gambling indicators (casino, gambling).
+    input_fields:
+      - description
+    logic:
+      type: keyword_match
+      field: description
+      keywords:
+        - CASINO
+        - GAMBLING
+      match: any
+    severity: Medium
+    tags:
+      - AML
+      - Gambling
+    mapped_control_ids:
+      - CTRL-005
+      - CTRL-006
+  - requirement_id: REQ-006
+    name: Keyword indicators: gift cards
+    description: Flag transactions with gift card indicators (giftcard, gift cards).
+    input_fields:
+      - description
+    logic:
+      type: keyword_match
+      field: description
+      keywords:
+        - GIFTCARD
+        - GIFT CARD
+        - GIFT CARDS
+      match: any
+    severity: Medium
+    tags:
+      - AML
+      - GiftCards
+    mapped_control_ids:
+      - CTRL-005
+      - CTRL-006
+  - requirement_id: REQ-007
+    name: Rapid movement of funds (inbound then outbound same day)
+    description: Flag if an inbound credit >= 7000 is followed by an outbound debit >= 6500 within 1 day on the same account.
+    input_fields:
+      - date
+      - account_id
+      - amount
+    logic:
+      type: rapid_movement
+      inbound_field: amount
+      outbound_field: amount
+      window_days: 1
+      min_inbound: 7000
+      min_outbound: 6500
+    severity: High
+    tags:
+      - AML
+      - RapidMovement
+    mapped_control_ids:
+      - CTRL-004
+      - CTRL-006
+  - requirement_id: REQ-008
+    name: Urgency / overdue language in outbound payments
+    description: Flag outbound payments containing urgency cues (urgent, overdue).
+    input_fields:
+      - description
+      - amount
+    logic:
+      type: keyword_match
+      field: description
+      keywords:
+        - URGENT
+        - OVERDUE
+      match: any
+    severity: Low
+    tags:
+      - AML
+      - SocialEngineering
+    mapped_control_ids:
+      - CTRL-005
+      - CTRL-006

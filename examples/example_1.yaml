@@ -1,0 +1,5 @@
+input: "Summarize the following items: red, green, blue."
+output:
+  - red
+  - green
+  - blue

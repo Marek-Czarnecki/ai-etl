@@ -1,0 +1,13 @@
+name: validate_reporting_requirements
+objective: Validate reporting requirements output for schema completeness and rule consistency.
+checks:
+  - id: schema.requirements_present
+    description: requirements exists and is a non-empty list
+  - id: schema.requirement_fields
+    description: each requirement has requirement_id, name, description, input_fields, logic, severity, mapped_control_ids
+  - id: schema.logic_type
+    description: logic.type is one of threshold, rolling_sum, keyword_match, country_in, rapid_movement
+  - id: schema.severity
+    description: severity is one of High, Medium, Low
+  - id: schema.unique_ids
+    description: requirement_id values are unique

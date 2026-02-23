@@ -1,0 +1,17 @@
+name: propose_patch
+system: "Propose a patch to the YAML rulebook. Output a unified diff OR a YAML patch, but be consistent."
+user_template: |-
+  Rulebook:
+  {rulebook}
+
+  Input:
+  {input_text}
+
+  Expected:
+  {expected}
+
+  Actual:
+  {actual}
+
+  Judge Report:
+  {judge_report}

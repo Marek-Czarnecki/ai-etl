@@ -1,0 +1,26 @@
+name: reg_to_controls
+objective: Convert a regulatory/policy excerpt into a concise set of auditable, testable controls.
+output_format: |-
+  source:
+    document_id: <string>
+    jurisdiction: <string>
+    effective_date: <YYYY-MM-DD>
+  controls:
+    - control_id: CTRL-001
+      title: <string>
+      control_statement: <string>
+      control_type: Preventative|Detective|Corrective
+      scope: <string>
+      evidence:
+        - <string>
+      priority: High|Medium|Low
+      rationale: <string>
+      source_citations:
+        - DOC#...
+rules:
+  - Create 5-8 controls only. No duplicates.
+  - Control statements must be testable and written as "must ...".
+  - Provide evidence types appropriate for transaction monitoring (alerts, case notes, audit logs, thresholds, watchlists).
+  - Use source_citations referencing the excerpt section numbers, e.g., "POLICY-001#S2".
+  - Do not invent external laws; stay within the excerpt.
+  - Prioritize high-risk items (structuring, high-risk jurisdictions, rapid movement, suspicious descriptors).

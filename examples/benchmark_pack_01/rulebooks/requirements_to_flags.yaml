@@ -1,0 +1,23 @@
+name: requirements_to_flags
+objective: Apply reporting requirements to transactions and produce explainable flags.
+output_format: |-
+  run_id: YYYYMMDD-HHMMSS
+  flags:
+    - transaction_id: TX-....
+      requirement_id: REQ-...
+      severity: High|Medium|Low
+      reason: <string>
+      evidence: <mapping>
+  summary:
+    total_transactions: <number>
+    flagged_transactions: <number>
+    flagged_by_severity:
+      High: <number>
+      Medium: <number>
+      Low: <number>
+rules:
+  - Only flag transactions that meet requirement logic. No speculative flags.
+  - Each flag must include concrete evidence values (amount, country, matched keyword, window sum).
+  - A single transaction may generate multiple flags if it triggers multiple requirements.
+  - Provide concise reasons that quote the computed condition (e.g., "abs(amount)=12500 >= 10000").
+  - Ensure summary counts are correct.

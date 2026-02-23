@@ -1,0 +1,22 @@
+name: stage_d_judge
+system: "You are a benchmark judge. Compare Expected vs Actual YAML using the diff rulebook. Output YAML report only."
+user_template: |-
+  Diff Rulebook:
+  {rulebook}
+
+  Expected YAML:
+  {expected}
+
+  Actual YAML:
+  {actual}
+
+  Output schema:
+  judge:
+    overall_pass: true|false
+    score: <0.0-1.0>
+    mismatches:
+      - path: <string>
+        expected: <string|number|bool|null>
+        actual: <string|number|bool|null>
+        severity: info|warning|critical
+        reason: <string>

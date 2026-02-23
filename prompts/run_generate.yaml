@@ -1,0 +1,14 @@
+name: run_generate
+system: "Follow the rulebook strictly. Return only YAML. No markdown fences. No commentary."
+user_template: |-
+  Rulebook:
+  {rulebook}
+
+  Input:
+  {input_text}
+
+  Examples:
+  {examples_text}
+
+  Output schema:
+  {schema_text}

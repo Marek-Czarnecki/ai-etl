@@ -1,0 +1,28 @@
+name: controls_to_requirements
+objective: Convert controls into computable reporting requirements that can be applied to transaction data.
+output_format: |-
+  requirements:
+    - requirement_id: REQ-001
+      name: <string>
+      description: <string>
+      input_fields:
+        - <string>
+      logic:
+        type: <string>
+      severity: High|Medium|Low
+      tags:
+        - <string>
+      mapped_control_ids:
+        - CTRL-...
+supported_logic_types:
+  - threshold: { type: threshold, field: amount_abs, operator: ">=", value: 10000 }
+  - rolling_sum: { type: rolling_sum, field: amount_abs, window_days: 2, operator: ">=", value: 10000, direction: debit|credit|any }
+  - keyword_match: { type: keyword_match, field: description, keywords: ["..."], match: any }
+  - country_in: { type: country_in, field: counterparty_country, countries: [IR, KP] }
+  - rapid_movement: { type: rapid_movement, inbound_field: amount, outbound_field: amount, window_days: 1, min_inbound: 5000, min_outbound: 4500 }
+rules:
+  - Produce 6-10 requirements maximum.
+  - Each requirement must map to at least one control.
+  - Use amount_abs for threshold logic where appropriate.
+  - Keep logic parameters simple; prefer deterministic checks.
+  - Use severity consistent with risk: high-risk jurisdictions and structuring should be High.

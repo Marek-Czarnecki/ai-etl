@@ -1,0 +1,27 @@
+document_id: POLICY-001
+excerpt: |-
+  # POLICY-001 — Financial Crime Monitoring (Synthetic Excerpt)
+
+  The organisation must implement controls to detect, investigate, and report suspicious activity associated with the movement of funds.
+
+  Minimum expectations include:
+
+  1) Identify and review unusually large transactions, including single high-value transfers and cash deposits/withdrawals above internal thresholds.
+
+  2) Detect patterns consistent with structuring (also known as "smurfing"), including multiple transactions below a threshold occurring within a short time window that appear to be related.
+
+  3) Apply enhanced monitoring to transactions involving higher-risk jurisdictions and higher-risk customer types, including where counterparty location is a known risk factor.
+
+  4) Detect rapid movement of funds where inbound credits are followed by outbound debits within short periods with limited economic rationale.
+
+  5) Identify transactions with indicators of potential money laundering or fraud, including:
+     - Round-dollar amounts inconsistent with typical behaviour
+     - Merchant descriptions suggesting digital asset exchanges or gambling services
+     - Unusual payment references (e.g., “urgent”, “invoice overdue”, “gift cards”, “crypto”, “wallet”)
+
+  6) Where indicators are detected, the organisation must:
+     - generate an alert with a clear rationale
+     - retain evidence (transaction details and rule triggers)
+     - support escalation and investigation workflows
+
+  Outputs must be auditable, explainable, and suitable for compliance review.

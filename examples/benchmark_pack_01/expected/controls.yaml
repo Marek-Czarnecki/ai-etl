@@ -1,0 +1,83 @@
+source:
+  document_id: POLICY-001
+  jurisdiction: AU
+  effective_date: "2024-01-01"
+controls:
+  - control_id: CTRL-001
+    title: Detect high-value transactions
+    control_statement: The organisation must detect and review single transactions above defined high-value thresholds.
+    control_type: Detective
+    scope: payments
+    evidence:
+      - threshold configuration
+      - alert logs
+      - case notes
+    priority: High
+    rationale: Large transactions can indicate suspicious activity and require review.
+    source_citations:
+      - POLICY-001#S1
+  - control_id: CTRL-002
+    title: Detect structuring patterns
+    control_statement: The organisation must detect patterns consistent with structuring, including multiple related transactions below thresholds within short time windows.
+    control_type: Detective
+    scope: payments
+    evidence:
+      - alert logs
+      - transaction history
+      - case notes
+    priority: High
+    rationale: Structuring can be used to evade thresholds and reporting.
+    source_citations:
+      - POLICY-001#S2
+  - control_id: CTRL-003
+    title: Enhanced monitoring for high-risk jurisdictions
+    control_statement: The organisation must apply enhanced monitoring to transactions involving higher-risk jurisdictions and escalate where risk indicators are present.
+    control_type: Detective
+    scope: cross_border_payments
+    evidence:
+      - watchlist configuration
+      - alert logs
+      - case notes
+    priority: High
+    rationale: Counterparty jurisdiction is a risk factor requiring heightened scrutiny.
+    source_citations:
+      - POLICY-001#S3
+  - control_id: CTRL-004
+    title: Detect rapid movement of funds
+    control_statement: The organisation must detect rapid movement of funds where inbound credits are followed by outbound debits within short timeframes without clear rationale.
+    control_type: Detective
+    scope: account_activity
+    evidence:
+      - alert rules
+      - transaction sequence
+      - investigation notes
+    priority: Medium
+    rationale: Rapid in-and-out movement can indicate layering or mule activity.
+    source_citations:
+      - POLICY-001#S4
+  - control_id: CTRL-005
+    title: Detect suspicious descriptors and merchant types
+    control_statement: The organisation must detect transactions containing suspicious references or merchant types, including digital asset exchanges, gambling, and gift card activity.
+    control_type: Detective
+    scope: payments
+    evidence:
+      - keyword lists
+      - merchant category mappings
+      - alert logs
+    priority: Medium
+    rationale: Certain descriptors and merchant types are commonly associated with elevated financial crime risk.
+    source_citations:
+      - POLICY-001#S5
+  - control_id: CTRL-006
+    title: Create explainable alerts with retained evidence
+    control_statement: The organisation must generate explainable alerts and retain evidence sufficient to support escalation, investigation, and audit review.
+    control_type: Corrective
+    scope: monitoring_and_investigation
+    evidence:
+      - alert payloads
+      - audit logs
+      - case management records
+    priority: High
+    rationale: Explainability and evidence retention enable compliance oversight and investigation.
+    source_citations:
+      - POLICY-001#S6
