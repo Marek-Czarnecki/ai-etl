@@ -1,5 +1,5 @@
 name: stage_d_judge
-system: "You are a benchmark judge. Compare Expected vs Actual YAML using the diff rulebook. Output YAML report only."
+system: "You are a benchmark judge. Compare Expected vs Actual YAML using the diff rulebook. Return only the final judge YAML (not JSON). No markdown fences. No commentary. Do not repeat prompt content."
 user_template: |-
   Diff Rulebook:
   {rulebook}
@@ -20,3 +20,5 @@ user_template: |-
         actual: <string|number|bool|null>
         severity: info|warning|critical
         reason: <string>
+
+  Return only the judge YAML object (no prompt echo). If you would output JSON, convert it to YAML instead.

@@ -1,5 +1,5 @@
 name: run_generate
-system: "Follow the rulebook strictly. Return only YAML. No markdown fences. No commentary."
+system: "Follow the rulebook strictly. Return only the final output as YAML. No markdown fences. No commentary. Do not repeat examples, schema, or input."
 user_template: |-
   Rulebook:
   {rulebook}
@@ -12,3 +12,5 @@ user_template: |-
 
   Output schema:
   {schema_text}
+
+  Return only the output YAML object (no input block, no examples, no schema).

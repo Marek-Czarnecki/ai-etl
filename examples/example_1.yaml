@@ -1,4 +1,9 @@
-input: "Summarize the following items: red, green, blue."
+input:
+  task: Summarize the following items.
+  items:
+    - red
+    - green
+    - blue
 output:
   - red
   - green

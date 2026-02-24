@@ -46,8 +46,33 @@ Minimal run:
 ```bash
 ai-etl run \
   --rulebook examples/rulebook.yaml \
-  --input examples/input.yaml
+  --input examples/input.yaml \
+  --model llama3.2:1b
 ```
+
+Simple job with a clean diff:
+
+```bash
+ai-etl run \
+  --rulebook examples/rulebook.yaml \
+  --input examples/input.yaml \
+  --examples examples/example_1.yaml \
+  --expected examples/expected.yaml \
+  --model llama3.2:1b \
+  --temperature 0
+```
+
+```bash
+ai-etl diff \
+  --rulebook examples/rulebook.yaml \
+  --expected examples/expected.yaml \
+  --actual out/<run_id>/actual_output.yaml \
+  --prompt prompts/stage_d_judge.yaml \
+  --model llama3.2:1b \
+  --temperature 0
+```
+
+Note: `ai-etl diff` prints the judge report to stdout and writes it to `out/<timestamp>/judge_report.yaml`.
 
 Run with all `run` options:
 

@@ -18,7 +18,7 @@ from ai_etl.models import RunMeta, RunParams
 from ai_etl.prompts import load_prompt, render_user
 from ai_etl.propose import build_patch_prompt, prepare_patch_artifacts
 from ai_etl.store_chroma import store_run
-from ai_etl.yamlutil import dump_yaml, dump_yaml_path
+from ai_etl.yamlutil import dump_yaml, dump_yaml_path, load_yaml_path
 
 app = typer.Typer(add_completion=False)
 logger = logging.getLogger(__name__)
@@ -231,6 +231,9 @@ def diff(
 ) -> None:
     """Run the judge prompt to compare expected and actual outputs."""
 
+    expected_obj = load_yaml_path(expected)
+    actual_obj = load_yaml_path(actual)
+
     run_dir = _run_once(
         rulebook=rulebook,
         input_path=None,
@@ -251,6 +254,17 @@ def diff(
         verbose=verbose,
     )
     report_path = run_dir / "judge_report.yaml"
+    if expected_obj == actual_obj:
+        dump_yaml_path(
+            report_path,
+            {
+                "judge": {
+                    "overall_pass": True,
+                    "score": 1.0,
+                    "mismatches": [],
+                }
+            },
+        )
     typer.echo(read_text(report_path))
 
 

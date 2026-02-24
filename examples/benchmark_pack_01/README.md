@@ -12,16 +12,68 @@ Notes:
 - All content is synthetic.
 - The "expected" outputs can be used for ai-etl judge comparisons.
 - Requirement logic is intentionally simple and computable (thresholds, regex-ish cues, rolling windows).
+- If you want a quick sanity check before this pack, run the simple test in the repo root README ("Running a Simple Job").
 
-Suggested commands (adjust to your CLI conventions):
-- Stage A:
-  ai-etl run --rulebook rulebooks/reg_to_controls.yaml --input inputs/regulatory_excerpt.yaml
+## Task List (from nothing running to a completed simple test)
 
-- Stage B:
-  ai-etl run --rulebook rulebooks/controls_to_requirements.yaml --input expected/controls.yaml
+1) Start the local services (Ollama + ChromaDB)
+2) Set up the local CLI (virtualenv + editable install)
+3) Verify connectivity with `ai-etl doctor`
+4) Run Stage A (regulatory excerpt -> controls)
+5) Run Stage B (controls -> reporting requirements)
+6) Run Stage C (reporting requirements -> validation report)
+7) Run Stage D (judge expected vs actual)
 
-- Stage C:
-  ai-etl run --rulebook rulebooks/validate_reporting_requirements.yaml --input out/<stage_b>/actual_output.yaml
+## Step-by-step (do one at a time)
 
-You can also judge:
-  ai-etl diff --rulebook rulebooks/judge.yaml --expected expected/reporting_requirements.yaml --actual out/<stage_b>/actual_output.yaml
+### Step 1: Start the local services
+
+From the repo root:
+
+```bash
+docker compose up -d
+```
+
+If the model did not pull automatically:
+
+```bash
+docker compose exec ollama ollama pull llama3.2:1b
+```
+
+### Step 2: Set up the local CLI
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -e .
+```
+
+### Step 3: Verify connectivity
+
+```bash
+ai-etl doctor --verbose
+```
+
+### Step 4: Stage A
+
+```bash
+ai-etl run --rulebook rulebooks/reg_to_controls.yaml --input inputs/regulatory_excerpt.yaml
+```
+
+### Step 5: Stage B
+
+```bash
+ai-etl run --rulebook rulebooks/controls_to_requirements.yaml --input expected/controls.yaml
+```
+
+### Step 6: Stage C
+
+```bash
+ai-etl run --rulebook rulebooks/validate_reporting_requirements.yaml --input out/<stage_b>/actual_output.yaml
+```
+
+### Step 7: Stage D (judge)
+
+```bash
+ai-etl diff --rulebook rulebooks/judge.yaml --expected expected/reporting_requirements.yaml --actual out/<stage_b>/actual_output.yaml
+```
