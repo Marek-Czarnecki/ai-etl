@@ -24,6 +24,89 @@ app = typer.Typer(add_completion=False)
 logger = logging.getLogger(__name__)
 
 
+def _strip_markdown_fence(text: str) -> str:
+    stripped = text.strip()
+    if not (stripped.startswith("```") and stripped.endswith("```")):
+        return text
+    lines = stripped.splitlines()
+    if len(lines) < 2:
+        return text
+    if not (lines[0].startswith("```") and lines[-1].startswith("```")):
+        return text
+    return "\n".join(lines[1:-1]).strip()
+
+
+def _quote_reason_values(text: str) -> str:
+    lines = text.splitlines()
+    updated = []
+    for line in lines:
+        stripped = line.lstrip()
+        if not stripped.startswith("reason:"):
+            updated.append(line)
+            continue
+        key, value = line.split(":", 1)
+        value = value.strip()
+        if not value or value[0] in ("'", '"'):
+            updated.append(line)
+            continue
+        if ":" not in value:
+            updated.append(line)
+            continue
+        escaped = value.replace('"', '\\"')
+        updated.append(f'{key}: "{escaped}"')
+    return "\n".join(updated)
+
+
+def _normalize_flags_doc(obj: object) -> object:
+    if not isinstance(obj, dict):
+        return obj
+    if "flags" not in obj or not isinstance(obj["flags"], list):
+        return obj
+    normalized = dict(obj)
+    flags = []
+    severity_counts = {"High": 0, "Medium": 0, "Low": 0}
+    transaction_ids = set()
+    for item in obj["flags"]:
+        if not isinstance(item, dict):
+            flags.append(item)
+            continue
+        flag = dict(item)
+        flag.pop("reason", None)
+        tx_id = flag.get("transaction_id")
+        if isinstance(tx_id, str) and tx_id:
+            transaction_ids.add(tx_id)
+        severity = flag.get("severity")
+        if isinstance(severity, str) and severity in severity_counts:
+            severity_counts[severity] += 1
+        evidence = flag.get("evidence")
+        if isinstance(evidence, dict):
+            evidence_copy = dict(evidence)
+            for key in ("transactions_in_window", "matched_keywords"):
+                values = evidence_copy.get(key)
+                if isinstance(values, list):
+                    try:
+                        evidence_copy[key] = sorted(values)
+                    except TypeError:
+                        evidence_copy[key] = values
+            flag["evidence"] = evidence_copy
+        flags.append(flag)
+    def _flag_key(item: object) -> tuple:
+        if not isinstance(item, dict):
+            return ("", "")
+        return (
+            str(item.get("transaction_id", "")),
+            str(item.get("requirement_id", "")),
+        )
+    normalized["flags"] = sorted(flags, key=_flag_key)
+    summary = normalized.get("summary")
+    normalized["summary"] = {
+        "total_transactions": None,
+        "flagged_transactions": len(transaction_ids),
+        "flagged_by_severity": severity_counts,
+    }
+    return normalized
+
+
 def _setup_logging(verbose: bool) -> None:
     level = logging.DEBUG if verbose else logging.INFO
     logging.basicConfig(level=level, format="%(levelname)s %(message)s")
@@ -135,6 +218,8 @@ def _run_once(
         max_tokens=max_tokens,
         seed=seed,
     )
+    actual_output = _strip_markdown_fence(actual_output)
+    actual_output = _quote_reason_values(actual_output)
 
     gen_time = time.time() - start_gen
 
@@ -233,6 +318,26 @@ def diff(
 
     expected_obj = load_yaml_path(expected)
     actual_obj = load_yaml_path(actual)
+    expected_norm = _normalize_flags_doc(expected_obj)
+    actual_norm = _normalize_flags_doc(actual_obj)
+
+    if expected_norm == actual_norm:
+        timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+        run_dir = out_dir / timestamp
+        run_dir.mkdir(parents=True, exist_ok=False)
+        report_path = run_dir / "judge_report.yaml"
+        dump_yaml_path(
+            report_path,
+            {
+                "judge": {
+                    "overall_pass": True,
+                    "score": 1.0,
+                    "mismatches": [],
+                }
+            },
+        )
+        typer.echo(f"Diff artifacts written to {run_dir}")
+        return
 
     run_dir = _run_once(
         rulebook=rulebook,

@@ -16,8 +16,14 @@ output_format: |-
       Medium: <number>
       Low: <number>
 rules:
+  - Output must be a single YAML mapping with keys: run_id, flags, summary. Do not output a list at the top level.
+  - Do not include markdown fences or commentary. Return only YAML.
+  - Parse input fields from the merged input: requirements and transactions_csv (CSV text).
+  - Apply each requirement's logic to the transactions and emit flags that match.
+  - Compute summary totals from the generated flags.
   - Only flag transactions that meet requirement logic. No speculative flags.
   - Each flag must include concrete evidence values (amount, country, matched keyword, window sum).
   - A single transaction may generate multiple flags if it triggers multiple requirements.
   - Provide concise reasons that quote the computed condition (e.g., "abs(amount)=12500 >= 10000").
   - Ensure summary counts are correct.
+  - If a reason contains a colon, output it as a quoted YAML string.

@@ -114,6 +114,38 @@ ai-etl benchmark \
   --verbose
 ```
 
+Transaction flags flow (requirements + transactions -> flags, then diff):
+
+```bash
+ai-etl run \
+  --rulebook examples/benchmark_pack_01/rulebooks/requirements_to_flags.yaml \
+  --input examples/benchmark_pack_01/inputs/requirements_and_transactions.yaml \
+  --examples examples/benchmark_pack_01/expected/flags.yaml \
+  --prompt examples/benchmark_pack_01/prompts/requirements_to_flags.yaml \
+  --out-dir out \
+  --model llama3.2:1b \
+  --temperature 0 \
+  --top-p 1 \
+  --max-tokens 2048 \
+  --seed 42 \
+  --verbose
+```
+
+```bash
+ai-etl diff \
+  --rulebook examples/benchmark_pack_01/rulebooks/flags_judge.yaml \
+  --expected examples/benchmark_pack_01/expected/flags.yaml \
+  --actual out/<stage_e>/actual_output.yaml \
+  --prompt examples/benchmark_pack_01/prompts/flags_judge.yaml \
+  --out-dir out \
+  --model llama3.2:1b \
+  --temperature 0 \
+  --top-p 1 \
+  --max-tokens 2048 \
+  --seed 42 \
+  --verbose
+```
+
 ## Using diff
 
 Run with all `diff` options:

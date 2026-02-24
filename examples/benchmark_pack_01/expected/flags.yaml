@@ -48,7 +48,7 @@ flags:
   - transaction_id: TX-0011
     requirement_id: REQ-004
     severity: Medium
-    reason: Matched keyword(s): CRYPTO, WALLET
+    reason: "Matched keyword(s): CRYPTO, WALLET"
     evidence:
       matched_keywords:
         - CRYPTO
@@ -57,7 +57,7 @@ flags:
   - transaction_id: TX-0012
     requirement_id: REQ-004
     severity: Medium
-    reason: Matched keyword(s): CRYPTO, WALLET
+    reason: "Matched keyword(s): CRYPTO, WALLET"
     evidence:
       matched_keywords:
         - CRYPTO
@@ -66,7 +66,7 @@ flags:
   - transaction_id: TX-0013
     requirement_id: REQ-004
     severity: Medium
-    reason: Matched keyword(s): CRYPTO, WALLET
+    reason: "Matched keyword(s): CRYPTO, WALLET"
     evidence:
       matched_keywords:
         - CRYPTO
@@ -91,7 +91,7 @@ flags:
   - transaction_id: TX-0023
     requirement_id: REQ-005
     severity: Medium
-    reason: Matched keyword(s): CASINO
+    reason: "Matched keyword(s): CASINO"
     evidence:
       matched_keywords:
         - CASINO
@@ -99,7 +99,7 @@ flags:
   - transaction_id: TX-0024
     requirement_id: REQ-006
     severity: Medium
-    reason: Matched keyword(s): GIFTCARD
+    reason: "Matched keyword(s): GIFTCARD"
     evidence:
       matched_keywords:
         - GIFTCARD
@@ -117,7 +117,7 @@ flags:
   - transaction_id: TX-0022
     requirement_id: REQ-008
     severity: Low
-    reason: Matched keyword(s): URGENT, OVERDUE
+    reason: "Matched keyword(s): URGENT, OVERDUE"
     evidence:
       matched_keywords:
         - URGENT

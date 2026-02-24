@@ -7,6 +7,7 @@ A) regulatory_excerpt.yaml -> controls.yaml
 B) controls.yaml -> reporting_requirements.yaml
 C) reporting_requirements.yaml -> validation_report.yaml
 D) judge(expected vs actual reporting_requirements)
+E) (manual) reporting_requirements + transactions -> flags, then judge flags
 
 Notes:
 - All content is synthetic.
@@ -23,6 +24,7 @@ Notes:
 5) Run Stage B (controls -> reporting requirements)
 6) Run Stage C (reporting requirements -> validation report)
 7) Run Stage D (judge expected vs actual)
+8) (Optional) Run Stage E (apply requirements to transactions, then judge flags)
 
 ## Step-by-step (do one at a time)
 
@@ -76,4 +78,16 @@ ai-etl run --rulebook rulebooks/validate_reporting_requirements.yaml --input out
 
 ```bash
 ai-etl diff --rulebook rulebooks/judge.yaml --expected expected/reporting_requirements.yaml --actual out/<stage_b>/actual_output.yaml
+```
+
+### Step 8: Stage E (requirements + transactions -> flags, then judge)
+
+This step is manual and not part of `ai-etl benchmark`. The input file below uses the expected requirements to avoid compounding earlier stage errors.
+
+```bash
+ai-etl run --rulebook rulebooks/requirements_to_flags.yaml --input inputs/requirements_and_transactions.yaml
+```
+
+```bash
+ai-etl diff --rulebook rulebooks/flags_judge.yaml --expected expected/flags.yaml --actual out/<stage_e>/actual_output.yaml
 ```

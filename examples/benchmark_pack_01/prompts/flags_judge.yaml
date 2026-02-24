@@ -1,0 +1,32 @@
+name: flags_judge
+system: "You are a strict benchmark judge. Compare Expected vs Actual YAML using the diff rulebook. Return only the final judge YAML. No markdown fences. No commentary. Do not report mismatches when values are equal. Never use placeholders."
+user_template: |-
+  Diff Rulebook:
+  {rulebook}
+
+  Expected YAML:
+  {expected}
+
+  Actual YAML:
+  {actual}
+
+  Output schema:
+  judge:
+    overall_pass: true|false
+    score: <0.0-1.0>
+    mismatches:
+      - path: <string>
+        expected: <string|number|bool|null>
+        actual: <string|number|bool|null>
+        severity: info|warning|critical
+        reason: <string>
+
+  If Expected and Actual are equivalent (ignoring ordering), return:
+  judge:
+    overall_pass: true
+    score: 1.0
+    mismatches: []
+
+  Do not use placeholder values like Expected-YAML or Actual-YAML.
+  If you cannot cite specific expected and actual values, omit the mismatch.
+  Return only the judge YAML object (single mismatches list, no prompt echo).

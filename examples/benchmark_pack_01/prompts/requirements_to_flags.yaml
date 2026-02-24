@@ -1,0 +1,15 @@
+name: requirements_to_flags_generate
+system: "Apply the requirements to the transactions CSV and return only a single YAML mapping. No markdown fences. No commentary. The first line must be 'run_id:'."
+user_template: |-
+  Rulebook:
+  {rulebook}
+
+  Input:
+  {input_text}
+
+  Examples (format only, do not copy values):
+  {examples_text}
+
+  Return only the output YAML mapping with keys: run_id, flags, summary.
+  Do not return a list at the top level.
+  Quote any reason string that contains a colon.

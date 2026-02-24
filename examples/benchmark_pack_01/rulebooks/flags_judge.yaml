@@ -1,0 +1,15 @@
+name: flags_judge
+objective: Compare expected vs actual transaction flags and summary for benchmark scoring.
+scoring:
+  overall_pass_rule: overall_pass is true only when no critical mismatches exist
+  score_guidance: start from 1.0 and subtract for mismatches (critical > warning > info)
+comparison_rules:
+  - Compare the set of (transaction_id, requirement_id) pairs and report missing or extra flags.
+  - For matching pairs, compare severity and evidence fields; ignore minor wording differences in reason.
+  - Compare summary totals (total_transactions, flagged_transactions, flagged_by_severity).
+  - Treat ordering differences as non-critical unless semantics change.
+  - Only report mismatches when expected and actual values are materially different.
+  - Output must contain exactly one mismatches list.
+  - If expected and actual are equivalent, set score to 1.0 and return an empty mismatches list.
+  - Mismatch paths must identify the field, not include inline values.
+  - Do not use placeholder text (e.g., Expected-YAML, Actual-YAML). If you cannot cite actual values, omit the mismatch.

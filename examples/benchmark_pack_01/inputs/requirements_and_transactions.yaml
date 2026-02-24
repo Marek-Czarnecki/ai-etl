@@ -1,0 +1,189 @@
+requirements:
+  - requirement_id: REQ-001
+    name: Single high-value transaction
+    description: Flag any single transaction where abs(amount) >= 10000 AUD.
+    input_fields:
+      - amount
+      - currency
+    logic:
+      type: threshold
+      field: amount_abs
+      operator: ">="
+      value: 10000
+    severity: High
+    tags:
+      - AML
+      - Threshold
+    mapped_control_ids:
+      - CTRL-001
+      - CTRL-006
+  - requirement_id: REQ-002
+    name: Structuring-like repeated cash withdrawals
+    description: Flag where there are 3 or more cash withdrawals of abs(amount) >= 300 within 1 day on the same account.
+    input_fields:
+      - date
+      - account_id
+      - channel
+      - amount
+    logic:
+      type: rolling_sum
+      field: amount_abs
+      window_days: 1
+      operator: ">="
+      value: 900
+      direction: debit
+    severity: High
+    tags:
+      - AML
+      - Structuring
+      - Cash
+    mapped_control_ids:
+      - CTRL-002
+      - CTRL-006
+  - requirement_id: REQ-003
+    name: High-risk jurisdiction counterparty
+    description: Flag any transaction where counterparty_country is in the high-risk list (IR, KP, SY).
+    input_fields:
+      - counterparty_country
+    logic:
+      type: country_in
+      field: counterparty_country
+      countries:
+        - IR
+        - KP
+        - SY
+    severity: High
+    tags:
+      - AML
+      - Jurisdiction
+    mapped_control_ids:
+      - CTRL-003
+      - CTRL-006
+  - requirement_id: REQ-004
+    name: Keyword indicators: crypto / wallet
+    description: Flag transactions with descriptions indicating digital assets (crypto, wallet, exchange).
+    input_fields:
+      - description
+    logic:
+      type: keyword_match
+      field: description
+      keywords:
+        - CRYPTO
+        - WALLET
+        - EXCHANGE
+      match: any
+    severity: Medium
+    tags:
+      - AML
+      - Crypto
+    mapped_control_ids:
+      - CTRL-005
+      - CTRL-006
+  - requirement_id: REQ-005
+    name: Keyword indicators: gambling / casino
+    description: Flag transactions with gambling indicators (casino, gambling).
+    input_fields:
+      - description
+    logic:
+      type: keyword_match
+      field: description
+      keywords:
+        - CASINO
+        - GAMBLING
+      match: any
+    severity: Medium
+    tags:
+      - AML
+      - Gambling
+    mapped_control_ids:
+      - CTRL-005
+      - CTRL-006
+  - requirement_id: REQ-006
+    name: Keyword indicators: gift cards
+    description: Flag transactions with gift card indicators (giftcard, gift cards).
+    input_fields:
+      - description
+    logic:
+      type: keyword_match
+      field: description
+      keywords:
+        - GIFTCARD
+        - GIFT CARD
+        - GIFT CARDS
+      match: any
+    severity: Medium
+    tags:
+      - AML
+      - GiftCards
+    mapped_control_ids:
+      - CTRL-005
+      - CTRL-006
+  - requirement_id: REQ-007
+    name: Rapid movement of funds (inbound then outbound same day)
+    description: Flag if an inbound credit >= 7000 is followed by an outbound debit >= 6500 within 1 day on the same account.
+    input_fields:
+      - date
+      - account_id
+      - amount
+    logic:
+      type: rapid_movement
+      inbound_field: amount
+      outbound_field: amount
+      window_days: 1
+      min_inbound: 7000
+      min_outbound: 6500
+    severity: High
+    tags:
+      - AML
+      - RapidMovement
+    mapped_control_ids:
+      - CTRL-004
+      - CTRL-006
+  - requirement_id: REQ-008
+    name: Urgency / overdue language in outbound payments
+    description: Flag outbound payments containing urgency cues (urgent, overdue).
+    input_fields:
+      - description
+      - amount
+    logic:
+      type: keyword_match
+      field: description
+      keywords:
+        - URGENT
+        - OVERDUE
+      match: any
+    severity: Low
+    tags:
+      - AML
+      - SocialEngineering
+    mapped_control_ids:
+      - CTRL-005
+      - CTRL-006
+transactions_csv: |-
+  transaction_id,date,account_id,channel,counterparty,counterparty_country,description,amount,currency
+  TX-0001,2026-01-10,ACCT-001,CARD,WOOLWORTHS AU,AU,WOOLWORTHS 3123 HAWTHORN,-82.45,AUD
+  TX-0002,2026-01-10,ACCT-001,OSKO,JOE'S COFFEE,AU,OSKO PAYID JOE COFFEE MELB,-5.40,AUD
+  TX-0003,2026-01-11,ACCT-001,BPAY,AAMI INSURANCE,AU,BPAY AAMI INSURANCE 445566,-186.12,AUD
+  TX-0004,2026-01-12,ACCT-001,TRANSFER,UNKNOWN,AU,TRANSFER FROM SAVINGS,2500.00,AUD
+  TX-0005,2026-01-12,ACCT-001,TRANSFER,BLUE OCEAN PTY LTD,AU,INVOICE 88421 CONSULTING FEE,4800.00,AUD
+  TX-0006,2026-01-13,ACCT-001,TRANSFER,GLOBAL FX LTD,SG,INTL TRANSFER REF 39281,-12500.00,AUD
+  TX-0007,2026-01-13,ACCT-001,TRANSFER,GLOBAL FX LTD,SG,INTL TRANSFER REF 39282,-9800.00,AUD
+  TX-0008,2026-01-14,ACCT-001,CASH,ATM CASHOUT,AU,ATM CASH WITHDRAWAL 455 COLLINS ST,-400.00,AUD
+  TX-0009,2026-01-14,ACCT-001,CASH,ATM CASHOUT,AU,ATM CASH WITHDRAWAL 455 COLLINS ST,-400.00,AUD
+  TX-0010,2026-01-14,ACCT-001,CASH,ATM CASHOUT,AU,ATM CASH WITHDRAWAL 455 COLLINS ST,-400.00,AUD
+  TX-0011,2026-01-15,ACCT-001,TRANSFER,CRYPTOX EXCHANGE,AU,CRYPTOX TOPUP WALLET 1A2B3C,-3000.00,AUD
+  TX-0012,2026-01-15,ACCT-001,TRANSFER,CRYPTOX EXCHANGE,AU,CRYPTOX TOPUP WALLET 9Z8Y7X,-3000.00,AUD
+  TX-0013,2026-01-16,ACCT-001,TRANSFER,CRYPTOX EXCHANGE,AU,CRYPTOX TOPUP WALLET 5K4J3H,-3000.00,AUD
+  TX-0014,2026-01-16,ACCT-001,TRANSFER,UNKNOWN,AU,TRANSFER TO SAVINGS,-5000.00,AUD
+  TX-0015,2026-01-17,ACCT-001,TRANSFER,RED FLAG CHARITY,AU,DONATION EMERGENCY URGENT RELIEF,-1500.00,AUD
+  TX-0016,2026-01-18,ACCT-001,TRANSFER,FRIEND PAYID,AU,OSKO PAYID THANKS,-120.00,AUD
+  TX-0017,2026-01-18,ACCT-001,TRANSFER,FRIEND PAYID,AU,OSKO PAYID THANKS AGAIN,-120.00,AUD
+  TX-0018,2026-01-19,ACCT-001,TRANSFER,UNKNOWN,IR,INTL TRANSFER FAMILY SUPPORT,-2200.00,AUD
+  TX-0019,2026-01-19,ACCT-001,TRANSFER,UNKNOWN,IR,INTL TRANSFER FAMILY SUPPORT,-2200.00,AUD
+  TX-0020,2026-01-20,ACCT-001,TRANSFER,UNKNOWN,AU,SALARY PAYROLL COMPANY,5200.00,AUD
+  TX-0021,2026-01-20,ACCT-001,TRANSFER,FAST CASH PTY LTD,AU,REFUND SETTLEMENT,5100.00,AUD
+  TX-0022,2026-01-20,ACCT-001,TRANSFER,OVERSEAS HOLDINGS,AE,OUTBOUND URGENT INVOICE OVERDUE,-5000.00,AUD
+  TX-0023,2026-01-21,ACCT-001,CARD,STAR CASINO,AU,STAR CASINO ENTERTAINMENT,-950.00,AUD
+  TX-0024,2026-01-21,ACCT-001,CARD,GIFTCARD HUB,AU,GIFTCARD HUB MELB CBD,-800.00,AUD
+  TX-0025,2026-01-22,ACCT-001,TRANSFER,UNKNOWN,AU,INBOUND CREDIT TEST,7000.00,AUD
+  TX-0026,2026-01-22,ACCT-001,TRANSFER,OVERSEAS HOLDINGS,AE,OUTBOUND TRANSFER SAME DAY,-6900.00,AUD
