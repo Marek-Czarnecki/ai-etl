@@ -1,0 +1,43 @@
+requirements:
+  - requirement_id: "REQ-001"
+    title: "Invoice overdue beyond 30 days"
+    description: "Flag invoices with days past due greater than 30."
+    severity: "Medium"
+    control_ids:
+      - "CTRL-001"
+    detection_logic: "if event_type == \"invoice\" and days_past_due > 30"
+  - requirement_id: "REQ-002"
+    title: "Unapproved subcontractor"
+    description: "Flag subcontractor starts without approval status Approved."
+    severity: "High"
+    control_ids:
+      - "CTRL-002"
+    detection_logic: "if event_type == \"subcontractor_start\" and approval_status != \"Approved\""
+  - requirement_id: "REQ-003"
+    title: "Audit response overdue"
+    description: "Flag audit responses that exceed 5 business days."
+    severity: "Medium"
+    control_ids:
+      - "CTRL-003"
+    detection_logic: "if event_type == \"audit_response\" and response_days > 5"
+  - requirement_id: "REQ-004"
+    title: "Late data incident notice"
+    description: "Flag data incidents where notice exceeds 24 hours."
+    severity: "High"
+    control_ids:
+      - "CTRL-004"
+    detection_logic: "if event_type == \"data_incident\" and notice_hours > 24"
+  - requirement_id: "REQ-005"
+    title: "Missing open-source disclosure"
+    description: "Flag deliverables without open-source disclosure."
+    severity: "Low"
+    control_ids:
+      - "CTRL-005"
+    detection_logic: "if event_type == \"deliverable\" and oss_disclosure != \"yes\""
+  - requirement_id: "REQ-006"
+    title: "Breach cure period exceeded"
+    description: "Flag breach cure events where cure_days exceed 15."
+    severity: "Medium"
+    control_ids:
+      - "CTRL-006"
+    detection_logic: "if event_type == \"breach_cure\" and cure_days > 15"

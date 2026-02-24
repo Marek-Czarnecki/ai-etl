@@ -1,0 +1,21 @@
+transaction_id,contract_id,event_date,event_type,invoice_id,amount,days_past_due,notice_days,subcontractor_name,approval_status,request_id,response_days,notice_hours,oss_disclosure,cure_days,notes
+TX-1001,CON-001,2026-03-01,invoice,INV-1001,12000,10,,,,,,,,,
+TX-1002,CON-001,2026-03-02,invoice,INV-1002,8500,45,,,,,,,,,
+TX-1003,CON-001,2026-03-03,payment,INV-1001,12000,0,,,,,,,,,
+TX-1004,CON-001,2026-03-03,subcontractor_start,,,,,Acme QA,Pending,,,,,,
+TX-1005,CON-001,2026-03-04,subcontractor_start,,,,,Bright Ops,Approved,,,,,,
+TX-1006,CON-001,2026-03-05,audit_response,,,,,,,REQ-77,8,,,,
+TX-1007,CON-001,2026-03-06,audit_response,,,,,,,REQ-78,3,,,,
+TX-1008,CON-001,2026-03-07,data_incident,,,,,,,,,36,,,
+TX-1009,CON-001,2026-03-07,data_incident,,,,,,,,,8,,,
+TX-1010,CON-001,2026-03-08,invoice,INV-1003,4300,60,,,,,,,,,
+TX-1011,CON-001,2026-03-09,deliverable,,,,,,,,,,yes,,
+TX-1012,CON-001,2026-03-09,deliverable,,,,,,,,,,no,,
+TX-1013,CON-001,2026-03-10,breach_cure,,,,,,,,,,,20,
+TX-1014,CON-001,2026-03-10,breach_cure,,,,,,,,,,,10,
+TX-1015,CON-001,2026-03-11,subcontractor_start,,,,,Silver Leaf,Not Approved,,,,,,
+TX-1016,CON-001,2026-03-12,invoice,INV-1004,2200,25,,,,,,,,,
+TX-1017,CON-001,2026-03-12,audit_request,,,,,,,AR-55,,,,,records requested
+TX-1018,CON-001,2026-03-13,breach_cure,,,,,,,,,,,30,
+TX-1019,CON-001,2026-03-14,payment,INV-1002,8500,0,,,,,,,,,
+TX-1020,CON-001,2026-03-15,deliverable,,,,,,,,,,yes,,final delivery

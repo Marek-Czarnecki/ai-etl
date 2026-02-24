@@ -1,0 +1,21 @@
+transaction_id,patient_id,event_date,event_type,medication,dose_mg,lab_name,lab_value,lab_unit,allergy,systolic_bp,pregnancy_status,follow_up_days,documentation_complete,notes
+TX-0001,PT-001,2026-02-01,lab_result,,,eGFR,62,mL/min/1.73m2,,,,,,
+TX-0002,PT-001,2026-02-01,med_order,Nevarel,150,eGFR,55,mL/min/1.73m2,,118,Not Pregnant,2,yes,indication documented
+TX-0003,PT-002,2026-02-02,med_order,Nevarel,100,eGFR,60,mL/min/1.73m2,Nevarel,120,Not Pregnant,1,yes,standard order
+TX-0004,PT-003,2026-02-02,med_order,Nevarel,120,eGFR,22,mL/min/1.73m2,,110,Not Pregnant,2,yes,renal check
+TX-0005,PT-004,2026-02-03,med_order,Nevarel,250,eGFR,48,mL/min/1.73m2,,116,Not Pregnant,4,yes,high dose
+TX-0006,PT-005,2026-02-03,med_order,Nevarel,100,eGFR,52,mL/min/1.73m2,,112,Pregnant,1,no,exception not noted
+TX-0007,PT-006,2026-02-04,med_order,CardioFlux,60,Potassium,5.9,mmol/L,,124,Not Pregnant,1,yes,pre check
+TX-0008,PT-007,2026-02-04,infusion,VasoLift,10,,,,,84,Not Pregnant,,yes,starting infusion
+TX-0009,PT-008,2026-02-05,med_order,Zyphra,500,,,,,122,Not Pregnant,,no,missing indication
+TX-0010,PT-009,2026-02-05,med_order,Nevarel,300,eGFR,44,mL/min/1.73m2,,118,Not Pregnant,3,yes,high dose
+TX-0011,PT-010,2026-02-06,med_order,Nevarel,100,eGFR,45,mL/min/1.73m2,,120,Not Pregnant,1,yes,ok renal
+TX-0012,PT-011,2026-02-06,med_order,CardioFlux,55,Potassium,6.1,mmol/L,,118,Not Pregnant,1,yes,elevated K
+TX-0013,PT-012,2026-02-07,med_order,Nevarel,220,eGFR,50,mL/min/1.73m2,,115,Not Pregnant,1,yes,followup scheduled
+TX-0014,PT-013,2026-02-07,med_order,Nevarel,100,eGFR,57,mL/min/1.73m2,,122,Not Pregnant,1,no,doc pending
+TX-0015,PT-014,2026-02-08,med_order,Nevarel,100,eGFR,58,mL/min/1.73m2,"Nevarel; Latex",119,Not Pregnant,1,yes,allergy noted
+TX-0016,PT-015,2026-02-08,med_order,Nevarel,140,eGFR,28,mL/min/1.73m2,,117,Not Pregnant,2,yes,low egfr
+TX-0017,PT-016,2026-02-09,med_order,CardioFlux,45,Potassium,4.7,mmol/L,,121,Not Pregnant,1,yes,within range
+TX-0018,PT-017,2026-02-09,infusion,VasoLift,12,,,,,102,Not Pregnant,,yes,stable
+TX-0019,PT-018,2026-02-10,med_order,Zyphra,500,,,,,126,Not Pregnant,,yes,indication present
+TX-0020,PT-019,2026-02-10,vital,,,SystolicBP,118,mmHg,,118,Not Pregnant,,,

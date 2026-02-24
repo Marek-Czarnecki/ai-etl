@@ -114,6 +114,52 @@ ai-etl benchmark \
   --verbose
 ```
 
+Benchmark Packs 02 and 03 run a 3-stage pipeline (A/B/C) and follow the same `ai-etl run` pattern as pack 01:
+
+```bash
+ai-etl run \
+  --rulebook examples/benchmark_pack_02/rulebooks/guideline_to_controls.md \
+  --input examples/benchmark_pack_02/inputs/medical_guideline_excerpt.md \
+  --expected examples/benchmark_pack_02/expected/controls.yaml
+```
+
+```bash
+ai-etl run \
+  --rulebook examples/benchmark_pack_02/rulebooks/controls_to_requirements.md \
+  --input <StageA actual_output.yaml> \
+  --expected examples/benchmark_pack_02/expected/reporting_requirements.yaml
+```
+
+```bash
+ai-etl run \
+  --rulebook examples/benchmark_pack_02/rulebooks/requirements_to_flags.md \
+  --input examples/benchmark_pack_02/inputs/clinical_events.csv \
+  --examples <StageB actual_output.yaml> \
+  --expected examples/benchmark_pack_02/expected/flags.yaml
+```
+
+```bash
+ai-etl run \
+  --rulebook examples/benchmark_pack_03/rulebooks/contract_to_controls.md \
+  --input examples/benchmark_pack_03/inputs/contract_excerpt.md \
+  --expected examples/benchmark_pack_03/expected/controls.yaml
+```
+
+```bash
+ai-etl run \
+  --rulebook examples/benchmark_pack_03/rulebooks/controls_to_requirements.md \
+  --input <StageA actual_output.yaml> \
+  --expected examples/benchmark_pack_03/expected/reporting_requirements.yaml
+```
+
+```bash
+ai-etl run \
+  --rulebook examples/benchmark_pack_03/rulebooks/requirements_to_flags.md \
+  --input examples/benchmark_pack_03/inputs/contract_events.csv \
+  --examples <StageB actual_output.yaml> \
+  --expected examples/benchmark_pack_03/expected/flags.yaml
+```
+
 Transaction flags flow (requirements + transactions -> flags, then diff):
 
 ```bash
