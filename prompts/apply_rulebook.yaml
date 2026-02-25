@@ -1,0 +1,10 @@
+name: apply_rulebook
+system: "Apply the rulebook instructions to the Input and return only the required output. No preamble. No markdown fences. No commentary."
+user_template: |-
+  Rulebook:
+  {rulebook}
+
+  Input:
+  {input_text}
+
+  Return only the output as specified by the rulebook.

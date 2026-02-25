@@ -1,0 +1,47 @@
+name: medical_guideline_to_controls_generate
+system: "Extract controls from the guideline excerpt and return only a single YAML mapping. No markdown fences. No commentary. The first line must be 'controls:'."
+user_template: |-
+  Return only YAML with a single mapping named controls, which contains multiple list items:
+  controls:
+    - control_id: CTRL-001
+      title: Control title
+      description: Description text
+      severity: High
+      rationale: Rationale text
+    - control_id: CTRL-002
+      title: Control title 2
+      description: Description text 2
+      severity: Medium
+      rationale: Rationale text 2
+
+
+  Output rules:
+  - Read each line in the Input section. Every numbered line is a rule.
+  - Count the number of numbered rules in the Input section.
+  - Output exactly 9 controls.
+  - Do not merge rules.
+  - Output must be a single YAML mapping named controls (only one controls key).
+  - Output exactly one control for each numbered rule. Do not omit any numbered rule.
+  - Each control must include a unique control_id value.
+  - Each control must include a severity which is either: High, Medium, or Low.
+  - Each control must include a title that summarizes the rule.
+  - Each control must include a description that restates the rule with its conditions/thresholds in a full sentence.
+  - Each control must include a rationale that briefly explains why that rule is needed.
+  - Do not copy the sample titles or descriptions from the schema.
+  - Do not repeat the controls key; use '-' controls under the single controls key.
+  - Indent controls two spaces under controls: and indent child keys two spaces further.
+  - Each control description must correspond to a different rule from the Rules list (1-9). No duplicates.
+  - Do not include extra keys or any markdown.
+
+  Rules list (for coverage, do not rephrase into fewer rules):
+  1. Medication orders must include a documented clinical indication and the ordering clinician role.
+  2. If an exception is required, the exception must be documented in the order notes.
+  3. Do not order Nevarel for patients with a documented Nevarel allergy.
+  4. Do not order Nevarel when the most recent eGFR is below 30 mL/min/1.73m2.
+  5. If Nevarel dose is above 200 mg, hemoglobin must be rechecked within 48 hours.
+  6. Nevarel must not be ordered for pregnant patients unless an exception is documented.
+  7. Before CardioFlux doses above 50 mg, potassium must be 5.5 mmol/L or lower.
+  8. VasoLift infusion must not be started if systolic blood pressure is below 90 mmHg.
+  9. Zyphra orders require the indication field to be completed.
+  Input:
+  {input_text}

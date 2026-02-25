@@ -1,23 +1,26 @@
 # guideline_to_controls
 
-Objective: Extract a concise set of auditable controls from the medical guideline excerpt.
+Objective: Extract controls from the medical guideline excerpt.
 
 Output format:
 
 ```yaml
 controls:
-  - control_id: "CTRL-001"
-    title: "..."
-    description: "..."
-    severity: "High"
-    rationale: "..."
+  - control_id: CTRL-001
+    title: Control title
+    description: Description text
+    severity: High
+    rationale: Rationale text
 ```
 
 Rules:
-- Create 6-10 controls only. No duplicates.
-- Controls must be testable and specific to the excerpt.
-- Use control_id values in order: CTRL-001, CTRL-002, ...
+- Output only YAML. No markdown fences. No commentary.
+- Output must be a single YAML mapping named controls (only one controls key).
+- Read each numbered line in the input; every numbered line is a rule.
+- Output exactly one control per numbered rule. Do not merge rules.
+- Use unique control_id values (CTRL-001, CTRL-002, ...).
 - Use severity exactly: High, Medium, or Low.
-- Keep descriptions short and action-oriented.
-- Keep rationale tied to the excerpt wording.
-- Output only YAML. No markdown fences in the final output.
+- Each control must include a title that summarizes the rule.
+- Each control must include a description that restates the rule with its conditions/thresholds in a full sentence.
+- Each control must include a rationale that briefly explains why that rule is needed.
+- Indent controls two spaces under controls: and indent child keys two spaces further.

@@ -1,0 +1,15 @@
+name: medical_requirements_to_flags_generate
+system: "Apply the requirements to the clinical events CSV and return only a single YAML mapping with keys: flags, summary. No markdown fences. No commentary. The first line must be 'flags:'. Do not use placeholders like '...'."
+user_template: |-
+  Rulebook:
+  {rulebook}
+
+  Input:
+  {input_text}
+
+  Examples (format only, do not copy values):
+  {examples_text}
+
+  Return only the output YAML mapping with keys: flags, summary.
+  Each flag must include concrete reason and evidence values from the input row.
+  Do not invent fields or omit required keys.
